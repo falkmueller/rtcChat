@@ -17,7 +17,7 @@ Start Screen:
 
 Chat screen:
 
-![Screnshot](img/screenshot1.jpg)
+![Screnshot](img/screenshot2.jpg)
 
 ## License
 
