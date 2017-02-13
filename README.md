@@ -6,7 +6,7 @@ RTC Chat
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 [![Website](https://img.shields.io/website-falk-falk/http/falk-m.de.svg)](https://falk-m.de)
 
-serverless RTC Chat with audio, video and text
+serverless RTC Chat with audio, video and text.
 [Demo](https://code.falk-m.de/chat/).
 No installation required. 
 The script server.php only use by handshake between clients at the start of the chat.
