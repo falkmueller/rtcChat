@@ -28,8 +28,8 @@ function oniceconnectionstatechange (state) {
           if (statetype === "failed" ||
             statetype === "disconnected" ||
             statetype === "closed") {
-                client.ShowStartScreen();
-                client.alert("Verbindung wurde unterbrochen", "error");
+                client.CloseConnection();
+                client.alert("connection were closed", "danger");
                 console.log("verbindung weg");
           }
 }
@@ -88,7 +88,7 @@ rtc.bindLocalStream = function(videoElementId,callback){
             if(callback){callback();}
       })
       .catch(function(e) {
-        alert('getUserMedia() error: ' + e);
+        console.log('getUserMedia() error: ' + e);
     });
 }
 

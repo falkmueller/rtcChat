@@ -9,12 +9,35 @@
    background: rgba(200,200,200,0.5) url('../img/gears.gif') no-repeat center center;
 }
 
-.chat_container {
+#chat_container {
     max-height: 300px;
-    overflow-y: hidden;
-    overflow-x: scroll;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+div#video {
+    text-align: center;
+    margin-bottom: 1rem;
 }
 
 video {
     max-width: 100%;
+}
+
+div#chat {
+    margin-bottom: 1rem;
+}
+
+#chat_container > div.self {
+    color: #ccc;
+}
+
+#chat_container > div.other {
+    
+}
+
+#out_alert {
+    position: fixed;
+    top: 0;
+    left: 0;
 }

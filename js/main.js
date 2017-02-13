@@ -9,6 +9,12 @@ client.events = [
     ["click", "#bt_end", "endConnection"]
 ];
 
+client.settings = {
+    audio: true,
+    video: true,
+    chat: true
+};
+
 client.init = function(){
     console.log("start");
     
@@ -27,10 +33,15 @@ client.init = function(){
 };
 
 client.endConnection = function(){
-    console.log("end");
     rtc.close();
-    client.ShowStartScreen();
+    client.CloseConnection();
 };
+
+client.CloseConnection = function(){
+    client.showWait();
+    client.displayMessage("connection were closed", "info");
+    setTimeout(function(){window.location = client.startUrl;},2000); 
+}
 
 client.sendmessage = function(){
     console.log("send message");
@@ -69,37 +80,37 @@ client.setRecript = function(){
 client.createOffer = function(){
     console.log("create offers");
     
-    var config = {
-        audio: $("#enable_audio").is(":checked"),
-        video: $("#enable_video").is(":checked"),
-        chat: $("#enable_chat").is(":checked")
-    };
+    client.settings.audio = $("#enable_audio").is(":checked");
+    client.settings.video = $("#enable_video").is(":checked");
+    client.settings.chat = $("#enable_chat").is(":checked");
     
-    rtc.offerOptions.offerToReceiveAudio = config.audio ? 1 : 0;
-    rtc.offerOptions.offerToReceiveVideo = config.video ? 1 : 0;
-    
-    if(!config.video){
-        $("#video").hide();
+    if(!client.settings.audio && !client.settings.video && !client.settings.chat){
+        client.alert("please select video, audio or text chat", "danger");
+        return false;
     }
     
-    if(!config.chat){
-        $("#chat").hide();
-    }
+    rtc.offerOptions.offerToReceiveAudio = client.settings.audio ? 1 : 0;
+    rtc.offerOptions.offerToReceiveVideo = client.settings.video ? 1 : 0;
     
     client.showWait();
     
     rtc.bindLocalStream("localVideo", function(){
         rtc.createOffer(function(localoffer){
-            config.offer = localoffer;
-            config.func = 'setOffer';
-            client.ServerCall(config, function(res){
+            var data = {
+                offer: localoffer,
+                func: 'setOffer',
+                audio: client.settings.audio,
+                video: client.settings.video,
+                chat: client.settings.chat
+            }
+             client.ServerCall(data, function(res){
                 if(!res.number){
                     console.log("error");
                     return;
                 }
                 console.log(res);
                 client.number = res.number;
-                client.alert("Nummer für Client: " + res.number, "success");
+                client.alert("send follow number to client: " + res.number, "success");
                 //TODO: nummer anzeigen für weitergabe an remote user
                 client.WaitOfAnswer();
             });
@@ -144,7 +155,21 @@ client.showWait = function(){
 }
 
 client.ShowChat = function(){
-    $("#headline_number").html(client.number);        
+    $("#headline_number").html(client.number);   
+    
+    $("#chat").addClass("col-sm-6");
+    $("#video").addClass("col-sm-6");
+    
+    if(!client.settings.video){
+        $("#video").hide();
+        $("#chat").removeClass("col-sm-6");
+    }
+    
+    if(!client.settings.chat){
+        $("#chat").hide();
+        $("#video").removeClass("col-sm-6");
+    }
+    
     $("[data-page]").hide();
     $("[data-page='chat']").show();
 }
@@ -156,7 +181,21 @@ client.ShowChat = function(){
  * @returns null
  */
 client.alert = function(message, type){
-    alert(message);
+    var msg = $("<div class='alert' role='alert'></div>");
+    msg.addClass("alert-" + (type ? type : "info"));
+    
+    msg.append("<span>" + message + "</span>");
+    
+    msg.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>')
+    
+    if($("[data-page='wait']").is(":visible")){
+        $("#inner_alert").append(msg);
+    } else {
+        $("#out_alert").append(msg);
+        setTimeout(function(){ msg.remove(); }, 3000);
+    }
+    
+    
 };
 
 /**
@@ -173,17 +212,12 @@ client.checkNumberRespone = function(){
         }
         
         client.showWait();
+        client.settings.audio = res.audio;
+        client.settings.video = res.video;
+        client.settings.chat = res.chat;
+        
         rtc.offerOptions.offerToReceiveAudio = res.audio ? 1 : 0;
         rtc.offerOptions.offerToReceiveVideo = res.video ? 1 : 0;
-
-        if(!res.video){
-            $("#video").hide();
-        }
-        
-        if(!res.chat){
-            $("#chat").hide();
-        }
-        
          
          rtc.bindLocalStream("localVideo", function(){
              rtc.getRemoteAnswer(res.offer, function(remoteAnswer){

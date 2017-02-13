@@ -31,70 +31,73 @@ if(!empty($_GET["number"])){
     
       <div data-page="start" style="display: none;">
           
-        <div class="col-md-6 col-sm-8 col-md-offset-3 col-sm-offset-2">          
-            <h2>Einladung erhalten?</h2>
+        <div class="col-md-4 col-sm-8 col-md-offset-4 col-sm-offset-2">          
+            <h2>Invitation received?</h2>
             <form id="form_recript" method="POST">
                 <div class="form-group">
-                  <label for="number">Nummer eingeben</label>
-                  <input type="number" class="form-control" id="number" placeholder="Nummer" name="number">
+                  <label for="number">enter number</label>
+                  <input type="number" class="form-control" id="number" placeholder="number" name="number">
                 </div>
                 <button class="btn btn-primary btn-block" type="submit">starten</button>
             </form>
 
-            <h2>Sitzung starten</h2>
+            <h2>Start new session</h2>
             <form method="POST" id="form_offer">
                 <input type="hidden" name="start" value="1">
                 <div class="checkbox">
                   <label>
-                      <input type="checkbox" name="video" id="enable_video" checked="checked" value="1"> Video
+                      <input type="checkbox" name="video" id="enable_video" checked="checked" value="1"> video
                    </label>
                 </div>
                 <div class="checkbox">
                   <label>
-                      <input type="checkbox" name="audio" id="enable_audio" checked="checked" value="1"> Audio
+                      <input type="checkbox" name="audio" id="enable_audio" checked="checked" value="1"> audio
                   </label>
                 </div>
                 <div class="checkbox">
                   <label>
-                      <input type="checkbox" name="chat" id="enable_chat"  checked="checked" value="1"> Text Chat
+                      <input type="checkbox" name="chat" id="enable_chat"  checked="checked" value="1"> text-chat
                   </label>
                 </div>
-                <button class="btn btn-primary btn-block" type="submit">starten</button>
+                <button class="btn btn-primary btn-block" type="submit">start</button>
             </form>
         </div>
       </div>
       
       <div data-page="wait" class="wait">
-          
+          <div class="col-md-4 col-sm-8 col-md-offset-4 col-sm-offset-2" id="inner_alert">  
+              
+          </div>
       </div>
       
       <div data-page="chat" style="display: none;">
-          <div class="col-md-6 col-sm-8 col-md-offset-3 col-sm-offset-2">      
-                <h1>Chat: <span id="headline_number"></span></h1>
-
-                <div id="video">
-
-                      <Video id="localVideo" muted="true"></video>
-                      <Video id="remoteVideo" /></video>
-                </div>
-
-
-                <div id="chat">
-                  <div id="chat_container">
-
+          <div class="col-md-8 col-sm-8 col-md-offset-2 col-sm-offset-2">
+              <h1>Chat: <span id="headline_number"></span></h1>
+              
+              <div class="row">
+                  <div class="col-sm-6 col-xs-12" id="video">
+                        <Video id="localVideo" muted="true"></video>
+                        <Video id="remoteVideo" /></video>
                   </div>
-                  <form id="form_message">
-                      <div class="form-group">
-                          <label for="message">Message:</label>
-                          <input type="text" class="form-control" id="message">
-                      </div>
-                      <button type="submit" class="btn btn-primary btn-block">send</button>
-                  </form>
-              </div>  
+                  <div class="col-sm-6 col-xs-12" id="chat">
+                        <div id="chat_container">
+
+                        </div>
+                        <form id="form_message">
+                            <div class="form-group">
+                                <label for="message">message:</label>
+                                <input type="text" autocomplete="off" class="form-control" id="message">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">send</button>
+                        </form>
+                  </div>
+              </div>
 
                 <a class="btn btn-default btn-block" id="bt_end">end</a>
           </div>
       </div>
+      
+      <div id="out_alert"></div>
       
     
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -104,6 +107,7 @@ if(!empty($_GET["number"])){
     <script type="text/javascript"> 
         var client = client || {}; 
         client.number =  '<?php echo $number ?>';
+        client.startUrl = '<?php echo getUrl(''); ?>';
         client.serverUrl = '<?php echo getUrl('server.php'); ?>';
     </script>
     <script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>

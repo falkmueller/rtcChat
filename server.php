@@ -55,7 +55,7 @@ class server {
         
         foreach($files_array as $file)
         {
-            if(($file == ".") || ($file == "..") || ($file == ".htaccess")){
+            if(($file == ".") || ($file == "..") || ($file == ".gitignore") || ($file == ".htaccess")){
                 continue;
             }
             
